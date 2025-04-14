@@ -2,6 +2,8 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
 use sdl2::render::Texture;
+mod renderer;
+use crate::renderer::RenderWindow;
 //use std::fs;
 //use sdl2::tff::init;
 use sdl2::render::Canvas;
@@ -19,31 +21,37 @@ use sdl2::rect::Rect;
 pub fn main() {  
     //Creating the window.
     let context = sdl2::init().unwrap();
-    let video_system = context.video().unwrap();
-    let window = video_system.window("myterm", 640, 480).position(0, 0).build().unwrap();
-    let mut canvas : Canvas<Window> = window.into_canvas().present_vsync().build().unwrap();
-    let texture_creator = canvas.texture_creator();
-    canvas.set_draw_color(Color::RGB(34, 34, 34));
-    canvas.clear(); 
-    canvas.present();
+    //let video_system = context.video().unwrap();
+    //let window = video_system.window("myterm", 640, 480).position(0, 0).build().unwrap();
+    //let mut canvas : Canvas<Window> = window.into_canvas().present_vsync().build().unwrap();
+    //let texture_creator = canvas.texture_creator();
+    //canvas.set_draw_color(Color::RGB(34, 34, 34));
+    //canvas.clear(); 
+    //canvas.present();
+    let mut window_context = RenderWindow::new(&context, 640, 480);
     let font_context = sdl2::ttf::init().unwrap();
     println!("Finding Fonts");
     //path to font
-    let font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf";
+    //let font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf";
+    let font_path = "/usr/share/fonts/truetype/freefont/FreeMono.ttf";
+    //Fontsize 10 x 16
     //loaded font context
-    let font = font_context.load_font(font_path, 12).unwrap();
+    let font = font_context.load_font(font_path, 16).unwrap();
     //rendered text
-    let rendering : Surface = font.render("hello world").solid(Color::RGB(255, 255, 255)).unwrap();
+    let string = "Aello worlg";
+    let rendering : Surface = font.render(string).solid(Color::RGB(255, 255, 255)).unwrap();
+    window_context.render_text_surface(rendering);
     //size of rendered text
-    let (width, height) = rendering.size();
+    /* let (width, height) = rendering.size();
+    println!("{}, {}", width, height);
     //rectangle covered by renedered text.
     let rect = Rect::new(0, 0, width, height);
     //rendered text as a texture
+    
     let text_texture : Texture = rendering.as_texture(&texture_creator).unwrap();
     //copy rendered text to canvas
     canvas.copy(&text_texture, None, Some(rect));
-    canvas.present();
-    //let font = get_font(font_path).unwrap();
+    canvas.present(); */
     let mut paused = false;
     let mut event_pump = context.event_pump().unwrap();
     //let font_output = Command::new("fc-list").args(":spacing=100");
